@@ -21,6 +21,8 @@ Add this into your composer.json file
 
 ```bash
 composer require epourashava/core-services
+
+php artisan vendor:publish --tag=core-config
 ```
 
 ## Socialite Usage
@@ -28,11 +30,11 @@ composer require epourashava/core-services
 We use Socialite for authentication. To use the Core provider, you need to add the following to your `config/services.php` file:
 
 ```php
-'ep-core' => [
-  'client_id' => env('EP_CORE_CLIENT_ID'),
-  'client_secret' => env('EP_CORE_CLIENT_SECRET'),
-  'redirect' => env('EP_CORE_REDIRECT_URI'),
-  'base_url' => env('EP_CORE_BASE_URL'),
+'core-oauth2' => [
+  'client_id' => env('CORE_CLIENT_ID'),
+  'client_secret' => env('CORE_CLIENT_SECRET'),
+  'redirect' => env('CORE_REDIRECT_URI'),
+  'base_url' => env('CORE_BASE_URL'),
 ],
 ```
 
@@ -41,10 +43,10 @@ We use Socialite for authentication. To use the Core provider, you need to add t
 Core Auth may require you to authorize against a custom URL, which you may provide as the base URL.
 
 ```bash
-EP_CORE_BASE_URL=http://core.test/
-EP_CORE_CLIENT_ID=your-client-id
-EP_CORE_CLIENT_SECRET=your-client-secret
-EP_CORE_REDIRECT_URI=http://your-callback-url
+CORE_BASE_URL=http://core.test/
+CORE_CLIENT_ID=your-client-id
+CORE_CLIENT_SECRET=your-client-secret
+CORE_REDIRECT_URI=http://your-callback-url
 ```
 
 ### Usage
@@ -52,13 +54,13 @@ EP_CORE_REDIRECT_URI=http://your-callback-url
 You should now be able to use the provider like you would regularly use Socialite (assuming you have the facade installed or run `composer require laravel/socialite`):
 
 ```php
-return Socialite::driver('ep-core')->redirect();
+return Socialite::driver('core-oauth2')->redirect();
 ```
 
 ### Callback
 
 ```php
-$user = Socialite::driver('ep-core')->user();
+$user = Socialite::driver('core-oauth2')->user();
 
 $token = $user->token;
 $refreshToken = $user->refreshToken;

@@ -15,7 +15,10 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // 
+        $this->mergeConfigFrom(
+            __DIR__ . '/../config/services.php',
+            'services'
+        );
     }
 
     /**
@@ -26,18 +29,22 @@ class CoreServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadSocialiteDriver();
+
+        $this->publishes([
+            __DIR__ . '/../config/core.php' => config_path('core.php'),
+        ], 'core-config');
     }
 
     /**
      * Register the Socialite provider.
-     * Socialite driver name: ep-core
+     * Socialite driver name: core-oauth2
      *
      * @return void
      */
     protected function loadSocialiteDriver()
     {
-        Socialite::extend('ep-core', function ($app) {
-            $config = $app->make('config')->get('services.ep-core');
+        Socialite::extend('core-oauth2', function ($app) {
+            $config = $app->make('config')->get('services.core-oauth2');
 
             return new CoreOauthProvider(
                 $app['request'],

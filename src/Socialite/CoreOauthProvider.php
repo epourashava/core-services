@@ -10,7 +10,7 @@ use Laravel\Socialite\Two\User;
 
 class CoreOauthProvider extends AbstractProvider
 {
-    public const IDENTIFIER = 'EP_CORE';
+    public const IDENTIFIER = 'CORE_OAUTH2';
 
     protected $scopes = [
         'openid',
