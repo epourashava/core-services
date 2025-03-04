@@ -1,0 +1,48 @@
+{
+    "name": "epourashava/core-services",
+    "version": "1.0.1",
+    "description": "Core app services for epourashava",
+    "license": "MIT",
+    "keywords": [
+        "oauth2",
+        "laravel",
+        "core",
+        "oauth",
+        "provider",
+        "socialite"
+    ],
+    "authors": [
+        {
+            "name": "Saiful Alam",
+            "email": "hello@msar.me"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/epourashava/socialite-core/issues",
+        "source": "https://github.com/epourashava/socialite-core",
+        "docs": "https://github.com/epourashava/socialite-core"
+    },
+    "require": {
+        "php": "^8.0",
+        "ext-json": "*",
+        "illuminate/support": "^9.21|^10.0|^11.0|^12.0",
+        "laravel/socialite": "^5.18"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Core\\CoreServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
