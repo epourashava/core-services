@@ -1,6 +1,6 @@
 {
     "name": "epourashava/core-services",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "Core app services for epourashava",
     "license": "MIT",
     "keywords": [
@@ -35,7 +35,7 @@
             "Core\\": "src/"
         },
         "files": [
-            "Helpers/functions.php"
+            "src/Helpers/functions.php"
         ]
     },
     "extra": {
