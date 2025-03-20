@@ -3,11 +3,10 @@
 namespace Core\Http\Middleware;
 
 use Closure;
-use Core\Services\Tenant;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class HandleSubdomain
+class EnsureJsonApiContentType
 {
     /**
      * Handle an incoming request.
@@ -16,13 +15,8 @@ class HandleSubdomain
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $subdomain = $request->route()->parameter('subdomain');
-
-        if ($subdomain !== null) {
-            Tenant::setSubDomain($subdomain, true)->checkTenant();
-
-            $request->route()->forgetParameter('subdomain');
-        }
+        $request->headers->set('content-type', 'application/json', true);
+        $request->headers->set('accept', 'application/json', true);
 
         return $next($request);
     }

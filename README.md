@@ -127,3 +127,60 @@ $client = OAuth2Client::instance();
 // Get the user
 $response = $client->getUser();
 ```
+
+---
+
+## Routing
+
+Use the `HandleSubdomain` middleware to handle subdomains in your routes.
+
+in `bootstrap/app.php` file add the following code:
+
+```php
+//
+Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        api: __DIR__ . '/../routes/api.php',
+        web: __DIR__ . '/../routes/web.php',
+        commands: __DIR__ . '/../routes/console.php',
+        health: '/up',
+    )->withMiddleware(function (Middleware $middleware) {
+    // ...
+    $middleware->web(append: [
+        \App\Http\Middleware\HandleSubdomain::class,
+        \App\Http\Middleware\HandleInertiaRequests::class,
+        \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
+    ]);
+
+    $middleware->api(append: [
+        \App\Http\Middleware\HandleSubdomain::class,
+        \App\Http\Middleware\EnsureJsonApiContentType::class,
+    ]);
+    // ...
+})
+->withExceptions(function (Exceptions $exceptions) {
+    // ...
+    (new ExceptionHandler)->handle($exceptions);
+})
+```
+
+and in `web/main.php` file add the following code:
+
+```php
+Route::domain('{subdomain}.' . config('app.base_url'))->group(
+    function () {
+        // Your routes here
+        // Tenant::getTenant() will return the current tenant
+
+        Route::get('/', function () {
+            return view('welcome');
+        });
+    }
+);
+```
+
+then include the `web/main.php` file in your `web.php` file:
+
+```php
+require __DIR__ . '/main.php';
+```
