@@ -2,10 +2,26 @@
 
 namespace Core\Models;
 
+use App\Models\Scopes\UserScope;
+use Core\Services\Tenant;
+use Core\Traits\CleanStorage;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
+#[ScopedBy([UserScope::class])]
 class User extends Authenticatable
 {
+    use HasFactory;
+    use Notifiable;
+    use HasRoles;
+    use SoftDeletes;
+    use CleanStorage;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -14,10 +30,14 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone_number',
+        'image',
+        'address',
+        'designation',
+        // Auth
         'access_token',
         'refresh_token',
         'expires_at',
-        'avatar',
     ];
 
     /**
@@ -29,6 +49,7 @@ class User extends Authenticatable
         'access_token',
         'refresh_token',
         'expires_at',
+        'remember_token'
     ];
 
     /**
@@ -39,6 +60,23 @@ class User extends Authenticatable
     protected $casts = [
         'expires_at' => 'datetime',
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function (User $model) {
+            $tenant = Tenant::getTenant();
+            if ($tenant) {
+                $tenant->users()->attach($model->id);
+            }
+        });
+    }
 
     /**
      * Get the user's avatar.
@@ -102,5 +140,72 @@ class User extends Authenticatable
             'refresh_token' => null,
             'expires_at' => null,
         ]);
+    }
+
+    /**
+     * Scope a query to only include users without tenant.
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWithoutTenant($query)
+    {
+        $query->withoutGlobalScope(UserScope::class);
+    }
+
+    /**
+     * Get the municipalities that owns the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getMunicipalitiesAttribute()
+    {
+        return Municipality::query()
+            ->when(
+                !$this->isSuperAdmin(),
+                fn(Builder $query) => $query->whereHas(
+                    'users',
+                    fn(Builder $nested) => $nested->withoutTenant()
+                )
+            )
+            ->get();
+    }
+
+    /**
+     * Get the tenant that owns the user.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tenants()
+    {
+        return $this->belongsToMany(
+            Municipality::class,
+            Municipality::UserPivotTable,
+            'user_id',
+            'municipality_id'
+        );
+    }
+
+    /**
+     * Check if the user is super admin.
+     * 
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return in_array(
+            $this->email,
+            config('auth.super_admin_emails', [])
+        );
+    }
+
+    /**
+     * Set the cleanable fields.
+     * 
+     * @return array
+     */
+    public function columnsForStorageItems(): array
+    {
+        return ['image'];
     }
 }

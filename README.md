@@ -100,7 +100,7 @@ Schema::create('users', function (Blueprint $table) {
     $table->text('refresh_token')->nullable();
     $table->timestamp('expires_at')->nullable();
     $table->string('avatar')->nullable();
-    $table->string('provider')->default('core');
+    $table->string('provider')->default('core-oauth2');
     $table->rememberToken();
     $table->timestamps();
 });

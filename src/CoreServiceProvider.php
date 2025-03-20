@@ -30,9 +30,15 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->loadSocialiteDriver();
 
+        // publish the config file
         $this->publishes([
             __DIR__ . '/../config/core.php' => config_path('core.php'),
         ], 'core-config');
+
+        // publish the migration file
+        $this->publishes([
+            __DIR__ . '/../database/migrations/' => database_path('migrations')
+        ], 'core-migrations');
     }
 
     /**

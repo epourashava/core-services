@@ -10,7 +10,7 @@ use InvalidArgumentException;
 class OAuth2Client extends Client
 {
     /**
-     * @var \App\Models\User
+     * @var \Core\Models\User
      */
     protected $authUser;
 
@@ -30,7 +30,7 @@ class OAuth2Client extends Client
     public function init()
     {
         /**
-         * @var \App\Models\User $user
+         * @var \Core\Models\User $user
          */
         $this->authUser = Auth::user();
         $accessToken = $this->authUser?->getAccessToken();

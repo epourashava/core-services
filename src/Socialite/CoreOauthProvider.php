@@ -54,7 +54,7 @@ class CoreOauthProvider extends AbstractProvider
 
     protected function getAuthUrl($state): string
     {
-        return $this->buildAuthUrlFromBase($this->baseUrl . '/authorize', $state);
+        return $this->buildAuthUrlFromBase($this->baseUrl . '/oauth/authorize', $state);
     }
 
     protected function getTokenUrl(): string

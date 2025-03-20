@@ -1,6 +1,6 @@
 {
     "name": "epourashava/core-services",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "Core app services for epourashava",
     "license": "MIT",
     "keywords": [
@@ -26,13 +26,17 @@
         "php": "^8.0",
         "ext-json": "*",
         "illuminate/support": "^9.21|^10.0|^11.0|^12.0",
+        "laravel/framework": "^12.0",
         "laravel/socialite": "^5.18",
-        "laravel/framework": "^12.0"
+        "spatie/laravel-permission": "^6.16"
     },
     "autoload": {
         "psr-4": {
             "Core\\": "src/"
-        }
+        },
+        "files": [
+            "Helpers/functions.php"
+        ]
     },
     "extra": {
         "laravel": {
