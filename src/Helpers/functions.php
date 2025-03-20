@@ -9,7 +9,7 @@ if (!function_exists('tenant')) {
      * Get the tenant instance
      *
      * @param bool $instance
-     * @return \App\Services\Tenant|\App\Models\Municipality
+     * @return \Core\Services\Tenant|\Core\Models\Municipality
      */
     function tenant($instance = false)
     {
